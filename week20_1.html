@@ -144,41 +144,46 @@
     }]`;
 
 
-        document.addEventListener("DOMContentLoaded", function (event) {
-            let heroes = JSON.parse(json);
-            console.log(heroes);
+        function getFromLocalStorage() {
+            heroes = JSON.parse(localStorage.getItem("heroes"));
+        }
 
+        function saveToLocalStorage() {
+            localStorage.setItem("heroes", JSON.stringify(heroes));
+        }
+        
+        function showHeroes() {
             let heroesContent = '';
-            for (let hero of heroes) {
-                heroesContent += `<div class="hero">
-                    <h2>${hero.name}</h2>                    
-                    <img class="picture" src=${hero.image} />
-                    <div><span class='bold'>Вселенная:</span>  ${hero.universe}</div>
-                    <div><span class='bold'>Альтер эго:</span>  ${hero.alterEgo}</div>
-                    <div><span class='bold'>Род деятельности:</span>  ${hero.activity}</div>
-                    <div><span class='bold'>Друзья:</span>  ${hero.friends}</div>
-                    <div><span class='bold'>Суперсилы:</span>  ${hero.superPowers}</div>
-                    <div><span class='bold'>Подробнее:</span>  ${hero.moreInfo}</div>
-                    
-                    <input type="number" min="0" max="5" id="input_rating"/>
-                    <button id="btn" class="btn" onclick="setRating();">Оценить!</button>
-                    
-                    <div>Рейтинг:
-                    <select id="select_rating" onchange="setRating();">
-                        <option name="rating" value="0">0</option>
-                        <option name="rating" value="1">1</option>
-                        <option name="rating" value="2">2</option>
-                        <option name="rating" value="3">3</option>
-                        <option name="rating" value="4">4</option>
-                        <option name="rating" value="5">5</option>
-                    </select>
-                    </div>
-
+            for (let i = 0; i < 10; i++) {
+                heroesContent += 
+                    `<div class="hero">
+                    <h2>${hero[i].name}</h2>                    
+                    <img class="picture" src=${hero[i].image} />
+                    <div><span class='bold'>Вселенная:</span>  ${hero[i].universe}</div>
+                    <div><span class='bold'>Альтер эго:</span>  ${hero[i].alterEgo}</div>
+                    <div><span class='bold'>Род деятельности:</span>  ${hero[i].activity}</div>
+                    <div><span class='bold'>Друзья:</span>  ${hero[i].friends}</div>
+                    <div><span class='bold'>Суперсилы:</span>  ${hero[i].superPowers}</div>
+                    <div><span class='bold'>Подробнее:</span>  ${hero[i].moreInfo}</div>                    
+                    Текущий рейтинг: ${hero[i].rate || 'Не задан'}<br>
+                    Оценить: <input id="hero-${i}" type="number" min="1" max="5">
+                    <button onclick='setRating(${i})'>Отправить оценку</button>
                     </div>`;
-            };
+            }
+            document.getElementById("heroesContainer").innerHTML =  heroesContent;
+        }
 
-            document.getElementById("heroesContainer").innerHTML = heroesContent;
+        function setRating(heroIndex) {
+            let value = document.getElementById("hero-" + heroIndex).value;
+            heroes[heroIndex].rate = +value;
+            saveToLocalStorage();
+            showHeroes();
+        }
 
+        document.addEventListener("DOMContentLoaded", function() {
+            let heroesJSON = JSON.parse(json);
+            getFromLocalStorage();
+            showHeroes();
         });
         
         
