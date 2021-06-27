@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #picture {
+            width: 400px;
+            height: 400px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2 id="title"></h2>
+    <p id="explanation"></p>
+    <img src="" id="picture">
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            fetch("https://api.nasa.gov/planetary/apod?api_key=Q7E57aKUuOiZwwYACqc9q1ZKulUcCOWZVoZpuqn6")
+                .then(response => response.json())
+                .then(planet => {
+                    console.log(planet);
+                    document.getElementById("title").innerText = planet.title;
+                    document.getElementById("explanation").innerText = planet.explanation;
+                    document.getElementById("picture").src = planet.hdurl;
+                })
+                .catch(error => console.log(error));
+        });
+    </script>
+</body>
+
+</html>
